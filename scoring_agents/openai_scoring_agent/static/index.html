@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Scoring Agent API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .section {
+            margin-bottom: 2rem;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .link-card {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        
+        .link-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+        
+        .link-card h3 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .link-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .endpoints {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        
+        .endpoint {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .endpoint:last-child {
+            border-bottom: none;
+        }
+        
+        .method {
+            background: #667eea;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .path {
+            font-family: 'Courier New', monospace;
+            color: #333;
+        }
+        
+        .description {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .feature {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .feature h4 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+        
+        .status.healthy {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.unhealthy {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI Scoring Agent API</h1>
+            <p>A FastAPI-based service for scoring AI responses using OpenAI</p>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2>📚 Documentation</h2>
+                <div class="links">
+                    <a href="/docs" class="link-card">
+                        <h3>Swagger UI</h3>
+                        <p>Interactive API documentation with testing interface</p>
+                    </a>
+                    <a href="/redoc" class="link-card">
+                        <h3>ReDoc</h3>
+                        <p>Alternative API documentation with better readability</p>
+                    </a>
+                    <a href="/openapi.json" class="link-card">
+                        <h3>OpenAPI JSON</h3>
+                        <p>Raw OpenAPI specification in JSON format</p>
+                    </a>
+                    <a href="/openapi.yaml" class="link-card">
+                        <h3>OpenAPI YAML</h3>
+                        <p>Raw OpenAPI specification in YAML format</p>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>✨ Features</h2>
+                <div class="features">
+                    <div class="feature">
+                        <h4>Single Response Scoring</h4>
+                        <p>Score individual AI responses with detailed reasoning</p>
+                    </div>
+                    <div class="feature">
+                        <h4>Batch Processing</h4>
+                        <p>Score multiple responses concurrently with progress tracking</p>
+                    </div>
+                    <div class="feature">
+                        <h4>Configurable Criteria</h4>
+                        <p>Support for multiple scoring criteria (accuracy, relevance, clarity, completeness, coherence)</p>
+                    </div>
+                    <div class="feature">
+                        <h4>Rate Limiting</h4>
+                        <p>Built-in rate limiting to respect OpenAI API limits</p>
+                    </div>
+                    <div class="feature">
+                        <h4>Error Handling</h4>
+                        <p>Comprehensive error handling with retry logic</p>
+                    </div>
+                    <div class="feature">
+                        <h4>Health Monitoring</h4>
+                        <p>Health check endpoints for monitoring</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🔗 API Endpoints</h2>
+                <div class="endpoints">
+                    <div class="endpoint">
+                        <div>
+                            <span class="method">GET</span>
+                            <span class="path">/</span>
+                        </div>
+                        <span class="description">Root endpoint with service information</span>
+                    </div>
+                    <div class="endpoint">
+                        <div>
+                            <span class="method">GET</span>
+                            <span class="path">/health</span>
+                        </div>
+                        <span class="description">Health check endpoint</span>
+                    </div>
+                    <div class="endpoint">
+                        <div>
+                            <span class="method">GET</span>
+                            <span class="path">/config</span>
+                        </div>
+                        <span class="description">Get current configuration</span>
+                    </div>
+                    <div class="endpoint">
+                        <div>
+                            <span class="method">POST</span>
+                            <span class="path">/score</span>
+                        </div>
+                        <span class="description">Score a single AI response</span>
+                    </div>
+                    <div class="endpoint">
+                        <div>
+                            <span class="method">POST</span>
+                            <span class="path">/score/batch</span>
+                        </div>
+                        <span class="description">Score multiple AI responses in batch</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>📊 Service Status</h2>
+                <div id="status" class="status">Checking...</div>
+            </div>
+            
+            <div class="footer">
+                <p>AI Scoring Agent API v1.0.0 | MIT License</p>
+                <p>Contact: support@example.com</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Check service health
+        async function checkHealth() {
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+                const statusDiv = document.getElementById('status');
+                
+                if (response.ok && data.status === 'healthy') {
+                    statusDiv.textContent = '✅ Service is healthy';
+                    statusDiv.className = 'status healthy';
+                } else {
+                    statusDiv.textContent = '❌ Service is unhealthy';
+                    statusDiv.className = 'status unhealthy';
+                }
+            } catch (error) {
+                const statusDiv = document.getElementById('status');
+                statusDiv.textContent = '❌ Service is unavailable';
+                statusDiv.className = 'status unhealthy';
+            }
+        }
+        
+        // Check health on page load
+        checkHealth();
+        
+        // Check health every 30 seconds
+        setInterval(checkHealth, 30000);
+    </script>
+</body>
+</html> 

@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  orchestrator:
+    build: .
+    ports:
+      - "8003:8003"
+    environment:
+      - OPTIMIZER_URL=http://optimizer:8001
+      - SCORER_URL=http://scorer:8000
+      - LOG_LEVEL=INFO
+    depends_on:
+      - optimizer
+      - scorer
+    networks:
+      - ai-testing-network
+    restart: unless-stopped
+
+  optimizer:
+    image: prompt-optimizer:latest
+    ports:
+      - "8001:8001"
+    environment:
+      - LOG_LEVEL=INFO
+    networks:
+      - ai-testing-network
+    restart: unless-stopped
+
+  scorer:
+    image: ai-scoring-agent:latest
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LOG_LEVEL=INFO
+    networks:
+      - ai-testing-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - ai-testing-network
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=orchestrator_db
+      - POSTGRES_USER=orchestrator
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ai-testing-network
+    restart: unless-stopped
+
+networks:
+  ai-testing-network:
+    driver: bridge
+
+volumes:
+  postgres_data: 

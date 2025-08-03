@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  scoring-agent:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LOG_LEVEL=INFO
+      - OPENAI_MODEL=gpt-4
+      - OPENAI_MAX_TOKENS=2000
+      - OPENAI_TEMPERATURE=0.0
+      - DEFAULT_SCORING_CRITERIA=accuracy,relevance,clarity
+      - SCORING_SCALE=1-10
+      - MAX_BATCH_SIZE=100
+      - RATE_LIMIT_PER_MINUTE=60
+    volumes:
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  # Optional: Add Redis for caching
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped 

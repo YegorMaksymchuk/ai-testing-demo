@@ -1,0 +1,548 @@
+openapi: 3.0.3
+info:
+  title: AI Scoring Agent API
+  description: |
+    A FastAPI-based service for scoring AI responses using OpenAI. 
+    This service provides both single and batch scoring capabilities with configurable criteria and comprehensive error handling.
+    
+    ## Features
+    - **Single Response Scoring**: Score individual AI responses with detailed reasoning
+    - **Batch Processing**: Score multiple responses concurrently with progress tracking
+    - **Configurable Criteria**: Support for multiple scoring criteria (accuracy, relevance, clarity, completeness, coherence)
+    - **Rate Limiting**: Built-in rate limiting to respect OpenAI API limits
+    - **Error Handling**: Comprehensive error handling with retry logic
+    - **Health Monitoring**: Health check endpoints for monitoring
+    
+    ## Authentication
+    This API requires an OpenAI API key to be configured in the environment.
+    
+    ## Rate Limiting
+    The API implements rate limiting to respect OpenAI API limits. Default is 60 requests per minute.
+    
+    ## Scoring Criteria
+    Available scoring criteria:
+    - **accuracy**: How correct and factual is the response
+    - **relevance**: How well does it address the question/context
+    - **clarity**: How clear and well-structured is the response
+    - **completeness**: How comprehensive is the response
+    - **coherence**: How logical and coherent is the response
+  version: 1.0.0
+  contact:
+    name: AI Scoring Agent Support
+    email: support@example.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+  - url: https://api.example.com
+    description: Production server
+
+paths:
+  /:
+    get:
+      summary: Root endpoint
+      description: Returns basic service information
+      operationId: getRoot
+      tags:
+        - System
+      responses:
+        '200':
+          description: Service information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "AI Scoring Agent API"
+                  version:
+                    type: string
+                    example: "1.0.0"
+                  status:
+                    type: string
+                    example: "running"
+
+  /health:
+    get:
+      summary: Health check
+      description: Check the health status of the service
+      operationId: getHealth
+      tags:
+        - System
+      responses:
+        '200':
+          description: Service health status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /config:
+    get:
+      summary: Get configuration
+      description: Get current configuration settings
+      operationId: getConfig
+      tags:
+        - System
+      responses:
+        '200':
+          description: Current configuration
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  openai_model:
+                    type: string
+                    example: "gpt-4"
+                  max_tokens:
+                    type: integer
+                    example: 2000
+                  temperature:
+                    type: number
+                    format: float
+                    example: 0.0
+                  default_criteria:
+                    type: array
+                    items:
+                      type: string
+                    example: ["accuracy", "relevance", "clarity"]
+                  scoring_scale:
+                    type: string
+                    example: "1-10"
+                  max_batch_size:
+                    type: integer
+                    example: 100
+                  rate_limit_per_minute:
+                    type: integer
+                    example: 60
+
+  /score:
+    post:
+      summary: Score single response
+      description: |
+        Score a single AI response using OpenAI. The response will be evaluated based on the specified criteria
+        and return a detailed score with reasoning.
+      operationId: scoreResponse
+      tags:
+        - Scoring
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScoringRequest'
+            examples:
+              basic:
+                summary: Basic scoring request
+                value:
+                  response: "The capital of France is Paris."
+                  criteria: ["accuracy", "relevance"]
+                  context: "Question: What is the capital of France?"
+              comprehensive:
+                summary: Comprehensive scoring request
+                value:
+                  response: "Paris is the capital and largest city of France, located in the north-central part of the country."
+                  criteria: ["accuracy", "relevance", "clarity", "completeness", "coherence"]
+                  context: "Question: What is the capital of France?"
+      responses:
+        '200':
+          description: Scoring result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScoringResponse'
+              examples:
+                success:
+                  summary: Successful scoring
+                  value:
+                    score: 8.5
+                    reasoning: "This is an accurate and relevant response that clearly answers the question about France's capital."
+                    criteria_scores:
+                      accuracy: 9.0
+                      relevance: 8.0
+                      clarity: 8.5
+                    confidence: 0.9
+                    model_used: "gpt-4"
+                    timestamp: "2024-01-01T12:00:00Z"
+                    processing_time_ms: 1500.0
+        '400':
+          description: Bad request - validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /score/batch:
+    post:
+      summary: Score multiple responses
+      description: |
+        Score multiple AI responses in batch using OpenAI. This is more efficient than scoring responses individually
+        and provides progress tracking for large batches.
+      operationId: scoreBatch
+      tags:
+        - Scoring
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchScoringRequest'
+            examples:
+              basic:
+                summary: Basic batch scoring request
+                value:
+                  responses:
+                    - "The capital of France is Paris."
+                    - "The capital of France is London."
+                    - "Paris is the capital of France."
+                  criteria: ["accuracy", "relevance"]
+                  context: "Question: What is the capital of France?"
+      responses:
+        '200':
+          description: Batch scoring results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchScoringResponse'
+              examples:
+                success:
+                  summary: Successful batch scoring
+                  value:
+                    results:
+                      - response: "The capital of France is Paris."
+                        score: 9.0
+                        reasoning: "Accurate and relevant response."
+                        criteria_scores:
+                          accuracy: 9.5
+                          relevance: 8.5
+                        confidence: 0.9
+                      - response: "The capital of France is London."
+                        score: 2.0
+                        reasoning: "Incorrect response - London is the capital of England, not France."
+                        criteria_scores:
+                          accuracy: 1.0
+                          relevance: 3.0
+                        confidence: 0.8
+                    total_processed: 2
+                    successful: 2
+                    failed: 0
+                    model_used: "gpt-4"
+                    timestamp: "2024-01-01T12:00:00Z"
+                    total_processing_time_ms: 3000.0
+                    average_processing_time_ms: 1500.0
+        '400':
+          description: Bad request - validation error or batch size exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    ScoringRequest:
+      type: object
+      required:
+        - response
+      properties:
+        response:
+          type: string
+          description: The AI response to be scored
+          minLength: 1
+          example: "The capital of France is Paris."
+        criteria:
+          type: array
+          items:
+            type: string
+            enum: [accuracy, relevance, clarity, completeness, coherence]
+          description: List of scoring criteria to evaluate
+          example: ["accuracy", "relevance", "clarity"]
+        context:
+          type: string
+          description: Additional context for scoring (e.g., original question, expected format)
+          example: "Question: What is the capital of France?"
+
+    BatchScoringRequest:
+      type: object
+      required:
+        - responses
+      properties:
+        responses:
+          type: array
+          items:
+            type: string
+          description: List of AI responses to be scored
+          minItems: 1
+          example: ["Response 1", "Response 2", "Response 3"]
+        criteria:
+          type: array
+          items:
+            type: string
+            enum: [accuracy, relevance, clarity, completeness, coherence]
+          description: List of scoring criteria to evaluate
+          example: ["accuracy", "relevance", "clarity"]
+        context:
+          type: string
+          description: Additional context for scoring (e.g., original question, expected format)
+          example: "Question: What is the capital of France?"
+
+    ScoringResponse:
+      type: object
+      required:
+        - score
+        - reasoning
+        - model_used
+        - timestamp
+      properties:
+        score:
+          type: number
+          format: float
+          minimum: 0.0
+          maximum: 10.0
+          description: Numeric score from 0-10
+          example: 8.5
+        reasoning:
+          type: string
+          description: Detailed reasoning for the score
+          example: "This is an accurate and relevant response that clearly answers the question."
+        criteria_scores:
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+            minimum: 0.0
+            maximum: 10.0
+          description: Individual scores for each criterion
+          example:
+            accuracy: 9.0
+            relevance: 8.0
+            clarity: 8.5
+        confidence:
+          type: number
+          format: float
+          minimum: 0.0
+          maximum: 1.0
+          description: Confidence level in the scoring (0-1)
+          example: 0.9
+        model_used:
+          type: string
+          description: OpenAI model used for scoring
+          example: "gpt-4"
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of scoring
+          example: "2024-01-01T12:00:00Z"
+        processing_time_ms:
+          type: number
+          format: float
+          description: Processing time in milliseconds
+          example: 1500.0
+
+    BatchScoringItem:
+      type: object
+      required:
+        - response
+        - score
+        - reasoning
+      properties:
+        response:
+          type: string
+          description: The original response that was scored
+          example: "The capital of France is Paris."
+        score:
+          type: number
+          format: float
+          minimum: 0.0
+          maximum: 10.0
+          description: Overall score from 0-10
+          example: 8.5
+        reasoning:
+          type: string
+          description: Detailed reasoning for the score
+          example: "This is an accurate and relevant response."
+        criteria_scores:
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+            minimum: 0.0
+            maximum: 10.0
+          description: Individual scores for each criterion
+          example:
+            accuracy: 9.0
+            relevance: 8.0
+        confidence:
+          type: number
+          format: float
+          minimum: 0.0
+          maximum: 1.0
+          description: Confidence level in the scoring (0-1)
+          example: 0.9
+        error:
+          type: string
+          description: Error message if scoring failed
+          example: "OpenAI API error: Rate limit exceeded"
+
+    BatchScoringResponse:
+      type: object
+      required:
+        - results
+        - total_processed
+        - successful
+        - failed
+        - model_used
+        - timestamp
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/BatchScoringItem'
+          description: List of scoring results
+        total_processed:
+          type: integer
+          minimum: 0
+          description: Total number of responses processed
+          example: 3
+        successful:
+          type: integer
+          minimum: 0
+          description: Number of successful scorings
+          example: 3
+        failed:
+          type: integer
+          minimum: 0
+          description: Number of failed scorings
+          example: 0
+        model_used:
+          type: string
+          description: OpenAI model used for scoring
+          example: "gpt-4"
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of batch scoring
+          example: "2024-01-01T12:00:00Z"
+        total_processing_time_ms:
+          type: number
+          format: float
+          description: Total processing time in milliseconds
+          example: 4500.0
+        average_processing_time_ms:
+          type: number
+          format: float
+          description: Average processing time per response
+          example: 1500.0
+
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - service
+        - version
+        - timestamp
+      properties:
+        status:
+          type: string
+          enum: [healthy, unhealthy, degraded]
+          description: Health status
+          example: "healthy"
+        service:
+          type: string
+          description: Service name
+          example: "ai-scoring-agent"
+        version:
+          type: string
+          description: Service version
+          example: "1.0.0"
+        timestamp:
+          type: string
+          format: date-time
+          description: Health check timestamp
+          example: "2024-01-01T12:00:00Z"
+        uptime_seconds:
+          type: number
+          format: float
+          description: Service uptime in seconds
+          example: 3600.0
+        openai_status:
+          type: string
+          description: OpenAI API connection status
+          example: "connected"
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - timestamp
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: "Validation Error"
+        detail:
+          type: string
+          description: Detailed error information
+          example: "Response cannot be empty"
+        timestamp:
+          type: string
+          format: date-time
+          description: Error timestamp
+          example: "2024-01-01T12:00:00Z"
+        request_id:
+          type: string
+          description: Request ID for tracking
+          example: "req_123456789"
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication (if implemented)
+
+tags:
+  - name: System
+    description: System endpoints for health checks and configuration
+  - name: Scoring
+    description: AI response scoring endpoints 

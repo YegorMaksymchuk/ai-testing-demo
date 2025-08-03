@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orchestrator Agent</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .feature {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .feature h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .feature p {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .links {
+            margin-top: 30px;
+        }
+        .link {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        .link:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #e8f5e8;
+            color: #2d5a2d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Orchestrator Agent</h1>
+        <p class="subtitle">
+            A central coordination service for AI agent testing and evaluation
+        </p>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>🔧 Agent Registration</h3>
+                <p>Register and validate AI agents for testing with comprehensive health checks</p>
+            </div>
+            <div class="feature">
+                <h3>⚡ Prompt Optimization</h3>
+                <p>Automatically optimize prompts using advanced AI techniques</p>
+            </div>
+            <div class="feature">
+                <h3>🧪 Agent Testing</h3>
+                <p>Execute tests against AI agents with optimized prompts</p>
+            </div>
+            <div class="feature">
+                <h3>📊 Response Scoring</h3>
+                <p>Score agent responses using multiple criteria and thresholds</p>
+            </div>
+            <div class="feature">
+                <h3>🔄 Batch Testing</h3>
+                <p>Execute multiple tests in parallel for efficient evaluation</p>
+            </div>
+            <div class="feature">
+                <h3>🏥 Health Monitoring</h3>
+                <p>Monitor the health of all services and agents in real-time</p>
+            </div>
+        </div>
+        
+        <div class="links">
+            <a href="/docs" class="link">📚 API Documentation</a>
+            <a href="/health" class="link">🏥 Health Check</a>
+            <a href="/config" class="link">⚙️ Configuration</a>
+            <a href="/api-info" class="link">ℹ️ API Info</a>
+        </div>
+        
+        <div class="status">
+            ✅ Service is running and ready to orchestrate AI agent testing
+        </div>
+    </div>
+</body>
+</html> 

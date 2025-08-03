@@ -1,0 +1,180 @@
+{
+	"info": {
+		"_postman_id": "569df13d-50cb-49ea-bd4d-ead14a62decb",
+		"name": "ai-testing-demo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3873284"
+	},
+	"item": [
+		{
+			"name": "01_BDD-example",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"requirements\": \"Enhanced Prompt:\\n\\n---\\n\\n**Prompt:** As an experienced software tester, your expertise is needed to create a well-structured Behavior-Driven Development (BDD) scenario for the login functionality of an application that incorporates Multi-Factor Authentication (MFA). \\n\\n**Context:** The goal is to ensure that the login process is secure and user-friendly, specifically focusing on the MFA aspect to enhance security. This scenario should address various user roles, such as a regular user and an admin, and include different potential outcomes (e.g., successful login, failed login due to incorrect credentials, or failed MFA verification).\\n\\n**Output Format:** Please provide the BDD scenario in the Gherkin language format, which includes the following sections: `Given`, `When`, `Then`. \\n\\n**Example:** Here’s an example of a similar BDD scenario for a login functionality without MFA:\\n\\n```\\nScenario: Successful login\\n  Given the user is on the login page\\n  When the user enters valid credentials\\n  Then the user should be redirected to the dashboard\\n```\\n\\n**Requirements:** Ensure that your scenario includes:\\n- Clear descriptions of the initial state (Given)\\n- Specific actions taken by the user (When)\\n- Expected outcomes (Then)\\n- Consideration for different user roles and scenarios involving MFA (e.g., entering a code sent to their mobile device)\\n\\nPlease ensure that the scenario is comprehensive and clear to facilitate understanding for all stakeholders involved.\\n\\n--- \\n\\nThis enhanced prompt provides a clearer context, specifies the expected output format, and incorporates an example, thus improving clarity and completeness while maintaining the original intent.\",\n    \"options\": {\n      \"include_negative_scenarios\": true,\n      \"max_scenarios_per_requirement\": 3\n    }\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8003/bdd-from-text",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8003",
+					"path": [
+						"bdd-from-text"
+					]
+				},
+				"description": "Generated from cURL: curl -X POST \"http://localhost:8003/bdd-from-text\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"requirements\": \"As a user, I should be able to log into the system.\",\n    \"options\": {\n      \"include_negative_scenarios\": true,\n      \"max_scenarios_per_requirement\": 3\n    }\n  }'"
+			},
+			"response": []
+		},
+		{
+			"name": "02_register-agent-example",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"agent_endpoint\": \"http://localhost:8003/bdd-from-text\",\n    \"agent_description\": \"BDD Agent that creates BDD scenarios from text\",\n    \"system_prompt\": \"You are a BDD agent that converts text descriptions into BDD (Behavior Driven Development) scenarios using Gherkin syntax.\",\n    \"skills_and_tools\": [\"text_analysis\", \"gherkin_generation\", \"scenario_creation\"],\n    \"test_criteria\": [\"accuracy\", \"relevance\", \"clarity\", \"completeness\"],\n    \"scoring_threshold\": 6.0\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8002/register-agent",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8002",
+					"path": [
+						"register-agent"
+					]
+				},
+				"description": "Generated from cURL: curl -X POST http://localhost:8003/register-agent \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"agent_endpoint\": \"http://localhost:3000\",\n    \"agent_description\": \"BDD Agent that creates BDD scenarios from text\",\n    \"system_prompt\": \"You are a BDD agent that converts text descriptions into BDD (Behavior Driven Development) scenarios using Gherkin syntax.\",\n    \"skills_and_tools\": [\"text_analysis\", \"gherkin_generation\", \"scenario_creation\"],\n    \"test_criteria\": [\"accuracy\", \"relevance\", \"clarity\", \"completeness\"],\n    \"scoring_threshold\": 6.0\n  }'"
+			},
+			"response": []
+		},
+		{
+			"name": "03_test-agent-example",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"agent_endpoint\": \"http://localhost:8003/bdd-from-text\",\n    \"test_prompt\": \"Create a BDD scenario for user login functionality\",\n    \"test_criteria\": [\"accuracy\", \"relevance\", \"clarity\", \"completeness\"],\n    \"scoring_threshold\": 6.0,\n    \"optimization_context\": {\n      \"language\": \"English\",\n      \"complexity\": \"intermediate\",\n      \"target_audience\": \"developers\"\n    }\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8002/test-agent",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8002",
+					"path": [
+						"test-agent"
+					]
+				},
+				"description": "Generated from cURL: curl -X POST http://localhost:8003/test-agent \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"agent_endpoint\": \"http://localhost:3000\",\n    \"test_prompt\": \"Create a BDD scenario for user login functionality\",\n    \"test_criteria\": [\"accuracy\", \"relevance\", \"clarity\", \"completeness\"],\n    \"scoring_threshold\": 6.0,\n    \"optimization_context\": {\n      \"language\": \"English\",\n      \"complexity\": \"intermediate\",\n      \"target_audience\": \"developers\"\n    }\n  }'"
+			},
+			"response": []
+		},
+		{
+			"name": "04_optimize-prompt-example",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"prompt\": \"Create a BDD scenario for login functionality with MFA auth\",\n    \"context\": {\n      \"language\": \"English\",\n      \"complexity\": \"intermediate\",\n      \"target_audience\": \"Business Owners and Test engineers\",\n      \"performance_requirements\": \"O(n log n)\",\n      \"additional_requirements\": [\"handle edge cases\", \"include type hints\"]\n    }\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8001/optimize",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"optimize"
+					]
+				},
+				"description": "Generated from cURL: curl -X POST \"http://localhost:8000/optimize\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"prompt\": \"Create a Python function to sort a list of numbers\",\n    \"context\": {\n      \"language\": \"python\",\n      \"complexity\": \"intermediate\",\n      \"target_audience\": \"developers\",\n      \"performance_requirements\": \"O(n log n)\",\n      \"additional_requirements\": [\"handle edge cases\", \"include type hints\"]\n    }\n  }'"
+			},
+			"response": []
+		},
+		{
+			"name": "05_score-example",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"response\": \"{\\\"status\\\":\\\"success\\\",\\\"scenarios\\\":[{\\\"feature\\\":\\\"Expertise Structure Feature\\\",\\\"scenario\\\":\\\"Expertise Structure Successfully\\\",\\\"given\\\":[\\\"the expertise is logged into the system\\\",\\\"the expertise has appropriate permissions\\\"],\\\"when\\\":[\\\"the expertise structures the requested item\\\"],\\\"then\\\":[\\\"the system should address various user roles, such as a regular user and an admin, and include different potential outcomes (e\\\"],\\\"examples\\\":[{\\\"user_type\\\":\\\"admin\\\",\\\"action_parameter\\\":\\\"item1\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"admin\\\",\\\"action_parameter\\\":\\\"item2\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"admin\\\",\\\"action_parameter\\\":\\\"item3\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"regular user\\\",\\\"action_parameter\\\":\\\"item1\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"regular user\\\",\\\"action_parameter\\\":\\\"item2\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"regular user\\\",\\\"action_parameter\\\":\\\"item3\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"guest\\\",\\\"action_parameter\\\":\\\"item1\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"guest\\\",\\\"action_parameter\\\":\\\"item2\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"guest\\\",\\\"action_parameter\\\":\\\"item3\\\",\\\"expected_result\\\":\\\"success\\\"}],\\\"gherkin\\\":\\\"Feature: Expertise Structure Feature\\\\n\\\\n  Scenario: Expertise Structure Successfully\\\\n    Given the expertise is logged into the system\\\\n    Given the expertise has appropriate permissions\\\\n    When the expertise structures the requested item\\\\n    Then the system should address various user roles, such as a regular user and an admin, and include different potential outcomes (e\\\\n\\\\n    Examples:\\\\n      | user_type | action_parameter | expected_result |\\\\n      | --- | --- | --- |\\\\n      | admin | item1 | success |\\\\n      | admin | item2 | success |\\\\n      | admin | item3 | success |\\\\n      | regular user | item1 | success |\\\\n      | regular user | item2 | success |\\\\n      | regular user | item3 | success |\\\\n      | guest | item1 | success |\\\\n      | guest | item2 | success |\\\\n      | guest | item3 | success |\\\"},{\\\"feature\\\":\\\"Expertise Expect Feature\\\",\\\"scenario\\\":\\\"Expertise Expect Successfully\\\",\\\"given\\\":[\\\"the expertise is logged into the system\\\",\\\"the expertise has appropriate permissions\\\"],\\\"when\\\":[\\\"the expertise expects the requested item\\\"],\\\"then\\\":[\\\"the system should address various user roles, such as a regular user and an admin, and include different potential outcomes (e\\\"],\\\"examples\\\":[{\\\"user_type\\\":\\\"admin\\\",\\\"action_parameter\\\":\\\"item1\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"admin\\\",\\\"action_parameter\\\":\\\"item2\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"admin\\\",\\\"action_parameter\\\":\\\"item3\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"regular user\\\",\\\"action_parameter\\\":\\\"item1\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"regular user\\\",\\\"action_parameter\\\":\\\"item2\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"regular user\\\",\\\"action_parameter\\\":\\\"item3\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"guest\\\",\\\"action_parameter\\\":\\\"item1\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"guest\\\",\\\"action_parameter\\\":\\\"item2\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"guest\\\",\\\"action_parameter\\\":\\\"item3\\\",\\\"expected_result\\\":\\\"success\\\"}],\\\"gherkin\\\":\\\"Feature: Expertise Expect Feature\\\\n\\\\n  Scenario: Expertise Expect Successfully\\\\n    Given the expertise is logged into the system\\\\n    Given the expertise has appropriate permissions\\\\n    When the expertise expects the requested item\\\\n    Then the system should address various user roles, such as a regular user and an admin, and include different potential outcomes (e\\\\n\\\\n    Examples:\\\\n      | user_type | action_parameter | expected_result |\\\\n      | --- | --- | --- |\\\\n      | admin | item1 | success |\\\\n      | admin | item2 | success |\\\\n      | admin | item3 | success |\\\\n      | regular user | item1 | success |\\\\n      | regular user | item2 | success |\\\\n      | regular user | item3 | success |\\\\n      | guest | item1 | success |\\\\n      | guest | item2 | success |\\\\n      | guest | item3 | success |\\\"},{\\\"feature\\\":\\\"Expertise Provide Feature\\\",\\\"scenario\\\":\\\"Expertise Provide Successfully\\\",\\\"given\\\":[\\\"the expertise is logged into the system\\\",\\\"the expertise has appropriate permissions\\\"],\\\"when\\\":[\\\"the expertise provides the requested item\\\"],\\\"then\\\":[\\\"the system should address various user roles, such as a regular user and an admin, and include different potential outcomes (e\\\"],\\\"examples\\\":[{\\\"user_type\\\":\\\"admin\\\",\\\"action_parameter\\\":\\\"item1\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"admin\\\",\\\"action_parameter\\\":\\\"item2\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"admin\\\",\\\"action_parameter\\\":\\\"item3\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"regular user\\\",\\\"action_parameter\\\":\\\"item1\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"regular user\\\",\\\"action_parameter\\\":\\\"item2\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"regular user\\\",\\\"action_parameter\\\":\\\"item3\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"guest\\\",\\\"action_parameter\\\":\\\"item1\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"guest\\\",\\\"action_parameter\\\":\\\"item2\\\",\\\"expected_result\\\":\\\"success\\\"},{\\\"user_type\\\":\\\"guest\\\",\\\"action_parameter\\\":\\\"item3\\\",\\\"expected_result\\\":\\\"success\\\"}],\\\"gherkin\\\":\\\"Feature: Expertise Provide Feature\\\\n\\\\n  Scenario: Expertise Provide Successfully\\\\n    Given the expertise is logged into the system\\\\n    Given the expertise has appropriate permissions\\\\n    When the expertise provides the requested item\\\\n    Then the system should address various user roles, such as a regular user and an admin, and include different potential outcomes (e\\\\n\\\\n    Examples:\\\\n      | user_type | action_parameter | expected_result |\\\\n      | --- | --- | --- |\\\\n      | admin | item1 | success |\\\\n      | admin | item2 | success |\\\\n      | admin | item3 | success |\\\\n      | regular user | item1 | success |\\\\n      | regular user | item2 | success |\\\\n      | regular user | item3 | success |\\\\n      | guest | item1 | success |\\\\n      | guest | item2 | success |\\\\n      | guest | item3 | success |\\\"}],\\\"metadata\\\":{\\\"processing_time_ms\\\":68.87,\\\"scenarios_generated\\\":3,\\\"quality_score\\\":0.92,\\\"timestamp\\\":\\\"2025-08-03T17:39:48.024624\\\",\\\"input_length\\\":1671,\\\"options_used\\\":{\\\"include_negative_scenarios\\\":true,\\\"output_format\\\":\\\"both\\\",\\\"max_scenarios_per_requirement\\\":3,\\\"include_examples\\\":true}},\\\"warnings\\\":[\\\"Limited scenarios to 3 as requested\\\"],\\\"errors\\\":[]}\",\n    \"criteria\": [\"accuracy\", \"relevance\", \"clarity\", \"completeness\"],\n    \"context\": \"Enhanced Prompt:\\n\\n---\\n\\n**Prompt:** As an experienced software tester, your expertise is needed to create a well-structured Behavior-Driven Development (BDD) scenario for the login functionality of an application that incorporates Multi-Factor Authentication (MFA). \\n\\n**Context:** The goal is to ensure that the login process is secure and user-friendly, specifically focusing on the MFA aspect to enhance security. This scenario should address various user roles, such as a regular user and an admin, and include different potential outcomes (e.g., successful login, failed login due to incorrect credentials, or failed MFA verification).\\n\\n**Output Format:** Please provide the BDD scenario in the Gherkin language format, which includes the following sections: `Given`, `When`, `Then`. \\n\\n**Example:** Here’s an example of a similar BDD scenario for a login functionality without MFA:\\n\\n```\\nScenario: Successful login\\n  Given the user is on the login page\\n  When the user enters valid credentials\\n  Then the user should be redirected to the dashboard\\n```\\n\\n**Requirements:** Ensure that your scenario includes:\\n- Clear descriptions of the initial state (Given)\\n- Specific actions taken by the user (When)\\n- Expected outcomes (Then)\\n- Consideration for different user roles and scenarios involving MFA (e.g., entering a code sent to their mobile device)\\n\\nPlease ensure that the scenario is comprehensive and clear to facilitate understanding for all stakeholders involved.\\n\\n--- \\n\\nThis enhanced prompt provides a clearer context, specifies the expected output format, and incorporates an example, thus improving clarity and completeness while maintaining the original intent.\"\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/score",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"score"
+					]
+				},
+				"description": "Generated from cURL: curl -X POST \"http://localhost:8000/score\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"response\": \"REST APIs use HTTP methods like GET, POST, PUT, DELETE to perform CRUD operations on resources.\",\n    \"criteria\": [\"accuracy\", \"relevance\", \"clarity\", \"completeness\"],\n    \"context\": \"Explain what REST APIs are and how they work.\"\n  }'"
+			},
+			"response": []
+		}
+	]
+}
